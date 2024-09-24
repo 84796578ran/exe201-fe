@@ -9,7 +9,8 @@
 .history
 .svn/
 migrate_working_dir/
-
+/build/
+/android/.gradle/
 # IntelliJ related
 *.iml
 *.ipr
