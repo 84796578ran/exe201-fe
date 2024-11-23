@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/Pages/common_page/Login_page/components/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,7 +42,7 @@ class MyHomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/splashScreen.jpg'), // Đường dẫn hình nền
+            image: AssetImage('assets/image/splashScreen.jpg'), // Đường dẫn hình nền
             fit: BoxFit.cover, // Tùy chỉnh hình nền full màn hình
           ),
         ),
@@ -72,9 +73,13 @@ class MyHomePage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // Hành động khi nhấn nút
-                  print('Bắt đầu nhấn!');
+                  Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => LoginPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
+
                   backgroundColor: Colors.blue, // Màu nền nút
                   padding: const EdgeInsets.symmetric(
                       horizontal: 40, vertical: 15), // Kích thước nút
