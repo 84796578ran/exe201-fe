@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:http/http.dart' as http;
+
+
 
 class LoginPage extends StatefulWidget {
   static const path = '/login';
@@ -11,7 +16,67 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true; // Biến điều khiển trạng thái ẩn/hiện mật khẩu
+  bool _obscurePassword = true;
+  bool _isLoading = false;
+
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true; // Bật chế độ loading khi bắt đầu đăng nhập
+    });
+
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    try {
+      var response = await http.get(
+        Uri.parse('https://674151fde4647499008d5b55.mockapi.io/Login'),
+      );
+
+      if (response.statusCode == 200) {
+        var data = response.body;
+        bool isLoginSuccessful = data.contains('"email":"$username"') && data.contains('"password":"$password"');
+        if (isLoginSuccessful) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Thông báo'),
+                content: const Text('Đăng nhập thành công'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email hoặc mật khẩu không đúng')),
+          );
+        }
+      } else {
+        // Lỗi từ server
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      // Lỗi kết nối
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lỗi kết nối')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Tắt chế độ loading sau khi hoàn thành
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Nút Đăng nhập
                     ElevatedButton(
                       onPressed: () {
+                        _login();
                         print('Username: ${_usernameController.text}');
                         print('Password: ${_passwordController.text}');
                       },
