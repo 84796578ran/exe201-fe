@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -22,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     setState(() {
-      _isLoading = true; // Bật chế độ loading khi bắt đầu đăng nhập
+      _isLoading = true;
     });
 
     String username = _usernameController.text;
@@ -32,10 +34,11 @@ class _LoginPageState extends State<LoginPage> {
       var response = await http.get(
         Uri.parse('https://674151fde4647499008d5b55.mockapi.io/Login'),
       );
-
+      print('Response status: ${response.statusCode}');
       if (response.statusCode == 200) {
         var data = response.body;
-        bool isLoginSuccessful = data.contains('"email":"$username"') && data.contains('"password":"$password"');
+        bool isLoginSuccessful = data.contains('"email":"$username"')
+            && data.contains('"password":"$password"');
         if (isLoginSuccessful) {
           showDialog(
             context: context,
@@ -54,18 +57,14 @@ class _LoginPageState extends State<LoginPage> {
               );
             },
           );
-        } else {
+        }
+        else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Email hoặc mật khẩu không đúng')),
           );
         }
-      } else {
-        // Lỗi từ server
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: ${response.statusCode}')),
-        );
       }
-    } catch (e) {
+    }catch (e) {
       // Lỗi kết nối
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lỗi kết nối')),
