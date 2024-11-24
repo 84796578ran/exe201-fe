@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
+import 'package:go_router/go_router.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -50,6 +51,10 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const WelcomePage()),
+                      );
                     },
                     child: const Text('OK'),
                   ),
