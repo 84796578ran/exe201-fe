@@ -35,7 +35,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
           _isLoading = false; // Kết thúc tải
         });
       } else {
-        // Xử lý nếu API trả về lỗi
         throw Exception('Failed to load data');
       }
     } catch (e) {
