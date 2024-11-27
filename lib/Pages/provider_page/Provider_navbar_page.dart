@@ -26,7 +26,7 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(Icons.search),
             label: 'Tìm kiếm',
           ),
           NavigationDestination(

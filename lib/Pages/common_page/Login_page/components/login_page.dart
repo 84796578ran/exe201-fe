@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 
 class LoginPage extends StatefulWidget {
   static const path = '/login';
-
   const LoginPage({super.key});
 
   @override
@@ -190,9 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Checkbox(
                           value: false,
-                          onChanged: (bool? value) {
-                            // Xử lý sự kiện thay đổi trạng thái checkbox
-                          },
+                          onChanged: (bool? value) {},
                         ),
                         const Text("Ghi Nhớ mật khẩu"),
                       ],
@@ -227,6 +225,11 @@ class _LoginPageState extends State<LoginPage> {
                             const Text('Chưa có tài khoản?'),
                             TextButton(
                               onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegistrationPage()));
                                 print('Đăng ký ngay bây giờ');
                               },
                               child: const Text(

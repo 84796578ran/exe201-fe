@@ -68,7 +68,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controller: _usernameController,
               decoration: const InputDecoration(
                 labelText: "Tên đăng nhập",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -77,7 +79,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               obscureText: true,
               decoration: const InputDecoration(
                 labelText: "Mật khẩu",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -86,7 +90,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                 labelText: "Số điện thoại",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -94,7 +100,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controller: _addressController,
               decoration: const InputDecoration(
                 labelText: "Địa chỉ",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -102,7 +110,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controller: _fullNameController,
               decoration: const InputDecoration(
                 labelText: "Họ và tên",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
               ),
             ),
             const SizedBox(height: 30),

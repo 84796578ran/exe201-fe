@@ -10,11 +10,22 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Welcome Page"),
+        title: Text.rich(
+            TextSpan(
+            children: [
+              const TextSpan(text: "Bạn muốn cho thuê phòng\n"),
+              const TextSpan(text: "hay thuê phòng"),
+
+            ]
+            ),
+          textAlign: TextAlign.center,
+        )
       ),
+
       body: Center(
         child: Column(
           children: <Widget>[
+            const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -28,8 +39,8 @@ class WelcomePage extends StatelessWidget {
                     );
                   },
                   child: const Text("Khách hàng"),
-
                 ),
+                const SizedBox(width: 20) ,
                 ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacement(
