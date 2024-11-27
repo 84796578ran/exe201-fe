@@ -1,15 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
-import 'package:go_router/go_router.dart';
-
 
 class LoginPage extends StatefulWidget {
   static const path = '/login';
+
   const LoginPage({super.key});
 
   @override
@@ -22,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   bool _isLoading = false;
 
-
   Future<void> _login() async {
     setState(() {
       _isLoading = true;
@@ -32,55 +28,55 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     try {
-      var response = await http.get(
-        Uri.parse('https://674151fde4647499008d5b55.mockapi.io/Login'),
+      // Load and parse the JSON file
+      final String jsonString =
+          await rootBundle.loadString('assets/data/common/user.json');
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      final List<dynamic> users = jsonData['users'];
+
+      // Find user with matching credentials
+      final user = users.firstWhere(
+        (user) => user['username'] == username && user['password'] == password,
+        orElse: () => null,
       );
-      print('Response status: ${response.statusCode}');
-      if (response.statusCode == 200) {
-        var data = response.body;
-        bool isLoginSuccessful = data.contains('"email":"$username"')
-            && data.contains('"password":"$password"');
-        if (isLoginSuccessful) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Thông báo'),
-                content: const Text('Đăng nhập thành công'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const WelcomePage()),
-                      );
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-        else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email hoặc mật khẩu không đúng')),
-          );
-        }
+
+      if (user != null) {
+        // Login successful
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đăng nhập thành công'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to welcome page after a short delay
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WelcomePage()),
+        );
+      } else {
+        // Login failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tên đăng nhập hoặc mật khẩu không đúng'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-    }catch (e) {
-      // Lỗi kết nối
+    } catch (e) {
+      print('Error during login: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lỗi kết nối')),
+        const SnackBar(
+          content: Text('Có lỗi xảy ra khi đăng nhập'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() {
-        _isLoading = false; // Tắt chế độ loading sau khi hoàn thành
+        _isLoading = false;
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                         ),
                         hintText: 'Nhập email',
-                        fillColor: Colors.grey[300], // Màu xám cho background
+                        fillColor: Colors.grey[300],
+                        // Màu xám cho background
                         filled: true, // Bật tính năng điền màu nền
                       ),
                     ),
@@ -174,12 +171,15 @@ class _LoginPageState extends State<LoginPage> {
                         filled: true,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility, // Icon con mắt
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility, // Icon con mắt
                             color: Colors.grey,
                           ),
                           onPressed: () {
                             setState(() {
-                              _obscurePassword = !_obscurePassword; // Toggle ẩn/hiện mật khẩu
+                              _obscurePassword =
+                                  !_obscurePassword; // Toggle ẩn/hiện mật khẩu
                             });
                           },
                         ),
@@ -210,7 +210,8 @@ class _LoginPageState extends State<LoginPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: Colors.grey[300], // Màu nền xám cho nút Đăng nhập
+                        backgroundColor:
+                            Colors.grey[300], // Màu nền xám cho nút Đăng nhập
                       ),
                       child: const Text('Đăng nhập'),
                     ),

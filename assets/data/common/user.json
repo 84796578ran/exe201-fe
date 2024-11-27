@@ -1,0 +1,114 @@
+{
+  "users": [
+    {
+      "email": "khanhtranss171111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "address": "Linh Đông, Thủ Đức",
+      "role": "admin",
+      "fullName": "Khánh Trân",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "1"
+    },
+    {
+      "email": "khaiptse171111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "address": "",
+      "role": "renter",
+      "fullName": "Phan Thanh Khải",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "2"
+    },
+    {
+      "email": "cuongtqse161111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "role": "renter",
+      "address": "",
+      "fullName": "Cường Trịnh",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "3"
+    },
+    {
+      "email": "sontptse161111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "address": "",
+      "role": "renter",
+      "fullName": "Trần Phạm Thành Sơn",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "4"
+    },
+    {
+      "email": "hoangmtse161111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "address": "Biên Hòa, Đồng Nai",
+      "role": "provider",
+      "fullName": "Mai Tiến Hoàng",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "5"
+    },
+    {
+      "email": "khoandse171111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "role": "renter",
+      "address": "",
+      "fullName": "Nguyễn Đăng Khoa",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "6"
+    },
+    {
+      "email": "buian2k2@gmail.com",
+      "password": "1",
+      "phone": "",
+      "role": "renter",
+      "address": "",
+      "fullName": "Bùi An",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "7"
+    },
+    {
+      "email": "vinhntse161111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "role": "renter",
+      "address": "",
+      "fullName": "Nguyễn Thành Vinh",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "8"
+    },
+    {
+      "email": "viethxse161111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "role": "renter",
+      "address": "",
+      "fullName": "Hoàng Xuân Việt",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "9"
+    },
+    {
+      "email": "thaonhss171111@fpt.edu.vn",
+      "password": "1",
+      "phone": "",
+      "address": "Phước Long B, Quận 9",
+      "role": "admin",
+      "fullName": "Như Thảo",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "10"
+    },
+    {
+      "email": "tongtbsa160148@fpt.edu.vn",
+      "password": "1",
+      "phone": "0899510892",
+      "address": "Thạnh Mỹ Lợi, Quận 2",
+      "role": "admin",
+      "fullName": "Trần Bách Tòng",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "10"
+    }
+  ]
+}
