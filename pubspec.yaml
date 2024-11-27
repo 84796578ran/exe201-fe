@@ -68,6 +68,7 @@ flutter:
      - assets/image/
      - assets/icon/gmail.png
      - assets/icon/registrationIcon.png
+     - assets/data/common/user.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
