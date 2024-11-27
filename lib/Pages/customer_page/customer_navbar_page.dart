@@ -25,9 +25,9 @@ class CustomerHomePage extends StatefulWidget {
 class _HomePageState extends State<CustomerHomePage> {
   static const List<Destination> allDestinations = <Destination>[
     //Destination('Tìm kiếm', Icons.search, Icons.search, Colors.blue, Colors.white, ServiceScreen.path),
-    Destination('Thông báo', Icons.circle_notifications_outlined, Icons.notification_add_outlined, Colors.blue, Colors.white, FavoriteScreen.path),
-    Destination('Trang chủ', Icons.home, Icons.home, Colors.blue, Colors.white, HomeScreen.path),
     Destination('Tin nhắn', Icons.message, Icons.message, Colors.blue, Colors.white, MessageScreen.path),
+    Destination('Trang chủ', Icons.home, Icons.home, Colors.blue, Colors.white, HomeScreen.path),
+    Destination('Thông báo', Icons.circle_notifications_outlined, Icons.notification_add_outlined, Colors.blue, Colors.white, FavoriteScreen.path),
     Destination('Cá nhân', Icons.boy, Icons.boy, Colors.blue, Colors.white, ProfileScreen.path),
     // Destination('Hồ sơ', Icons.person_outlined, Icons.person, Colors.blue, Colors.white, LoginPage.path),
   ];

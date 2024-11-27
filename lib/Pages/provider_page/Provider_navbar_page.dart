@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class NavigationExample extends StatefulWidget {
-  const NavigationExample({super.key});
+class ProviderNavbar extends StatefulWidget {
+  const ProviderNavbar({super.key});
 
   @override
-  State<NavigationExample> createState() => _NavigationExampleState();
+  State<ProviderNavbar> createState() => _ProviderNavbarleState();
 }
 
-class _NavigationExampleState extends State<NavigationExample> {
+class _ProviderNavbarleState extends State<ProviderNavbar> {
   int currentPageIndex = 0;
 
   @override
@@ -30,8 +30,8 @@ class _NavigationExampleState extends State<NavigationExample> {
             label: 'Tìm kiếm',
           ),
           NavigationDestination(
-            icon: Badge(child: Icon(Icons.heart_broken)),
-            label: 'Yêu thích',
+            icon: Badge(child: Icon(Icons.notification_add_outlined)),
+            label: 'Thông báo',
           ),
           NavigationDestination(
             icon: Badge(
@@ -57,31 +57,24 @@ class _NavigationExampleState extends State<NavigationExample> {
         ],
       ),
       body: [
-        /// Trang "Tìm kiếm"
         Center(
           child: Text(
             'Tìm kiếm',
             style: theme.textTheme.titleLarge,
           ),
         ),
-
-        /// Trang "Yêu thích"
         Center(
           child: Text(
             'Yêu thích',
             style: theme.textTheme.titleLarge,
           ),
         ),
-
-        /// Trang "Trang chủ"
         Center(
           child: Text(
             'Trang chủ',
             style: theme.textTheme.titleLarge,
           ),
         ),
-
-        /// Trang "Tin nhắn"
         ListView.builder(
           reverse: true,
           itemCount: 2,
@@ -122,8 +115,6 @@ class _NavigationExampleState extends State<NavigationExample> {
             );
           },
         ),
-
-        /// Trang "Thông tin cá nhân"
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(

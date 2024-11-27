@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ServiceRoom extends StatefulWidget {
-  
   const ServiceRoom({super.key});
 
   @override
@@ -14,4 +13,5 @@ class _ServiceRoomState extends State<ServiceRoom> {
     return const Placeholder();
   }
 }
+
 

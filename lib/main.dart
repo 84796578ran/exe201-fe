@@ -1,9 +1,14 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:roomspot/Pages/common_page/Login_page/components/login_page.dart';
+import 'package:roomspot/Pages/customer_page/screen/service_screen/Service_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -67,22 +72,20 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
             ),
-            const Spacer(), // Tạo khoảng cách giữa nội dung chính và nút
+            const Spacer(),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0), // Khoảng cách nút tới đáy màn hình
+              padding: const EdgeInsets.only(bottom: 20.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Hành động khi nhấn nút
                   Navigator.push(context,
                     MaterialPageRoute(
                         builder: (context) => LoginPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-
-                  backgroundColor: Colors.blue, // Màu nền nút
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 40, vertical: 15), // Kích thước nút
+                      horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // Bo góc nút
                   ),
@@ -102,3 +105,4 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+

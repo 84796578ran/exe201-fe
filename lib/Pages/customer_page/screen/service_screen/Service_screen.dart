@@ -18,13 +18,10 @@ class ServiceScreen extends StatefulWidget {
 class _ServiceScreenState extends State<ServiceScreen> {
   late List<Room> roomService = [];
   bool _isLoading = false;
-
-  // Fetch API để lấy danh sách các phòng
   void _fetchServices() async {
     setState(() {
       _isLoading = true; // Bắt đầu tải
     });
-
     try {
       final response = await http.get(
         Uri.parse('https://674151fde4647499008d5b55.mockapi.io/getAllPost'),

@@ -1,9 +1,6 @@
-
-
 import 'package:flutter/material.dart';
-import "package:go_router/go_router.dart";
-import 'package:roomspot/Pages/customer_page/customer_navbar_page.dart';
 import 'package:roomspot/Pages/customer_page/screen/service_screen/Service_screen.dart';
+import 'package:roomspot/Pages/provider_page/Provider_navbar_page.dart';
 
 class WelcomePage extends StatelessWidget {
   static const path ="/welcome";
@@ -23,7 +20,6 @@ class WelcomePage extends StatelessWidget {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    // Chuyển hướng đến ServiceScreen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -31,13 +27,19 @@ class WelcomePage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text("Customer"),
+                  child: const Text("Khách hàng"),
 
                 ),
-                // ElevatedButton(
-                //     onPressed: () => context.go(ServiceScreen.path),
-                //     child: const Text("Customer")
-                //),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(builder: (context) => const ProviderNavbar()
+                         ),
+                      );
+                    },
+                    child: const Text("Nhà cung cấp"),
+                ),
               ],
             )
           ],
