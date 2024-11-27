@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,35 +34,20 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       var response = await http.get(
-        Uri.parse('https://674151fde4647499008d5b55.mockapi.io/Login'),
+        Uri.parse('https://674151fde4647499008d5b55.mockapi.io/user'),
       );
       print('Response status: ${response.statusCode}');
+
       if (response.statusCode == 200) {
         var data = response.body;
-        bool isLoginSuccessful = data.contains('"email":"$username"')
+        bool isLoginSuccessful = data.contains('"username":"$username"')
             && data.contains('"password":"$password"');
         if (isLoginSuccessful) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Thông báo'),
-                content: const Text('Đăng nhập thành công'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
+
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const WelcomePage()),
                       );
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
         }
         else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -70,13 +56,12 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     }catch (e) {
-      // Lỗi kết nối
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lỗi kết nối')),
       );
     } finally {
       setState(() {
-        _isLoading = false; // Tắt chế độ loading sau khi hoàn thành
+        _isLoading = false;
       });
     }
   }
@@ -191,7 +176,6 @@ class _LoginPageState extends State<LoginPage> {
                         Checkbox(
                           value: false,
                           onChanged: (bool? value) {
-                            // Xử lý sự kiện thay đổi trạng thái checkbox
                           },
                         ),
                         const Text("Ghi Nhớ mật khẩu"),
@@ -226,6 +210,10 @@ class _LoginPageState extends State<LoginPage> {
                             const Text('Chưa có tài khoản?'),
                             TextButton(
                               onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => RegistrationPage())
+                                );
                                 print('Đăng ký ngay bây giờ');
                               },
                               child: const Text(
