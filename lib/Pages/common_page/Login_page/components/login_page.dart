@@ -5,6 +5,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:roomspot/Pages/provider_page/controllers/user_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const String USER_EMAIL_KEY = 'user_email';
 
 class LoginPage extends StatefulWidget {
   static const path = '/login';
@@ -19,6 +22,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
   final _userController = UserController.to;
+
+  Future<void> _saveUserEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(USER_EMAIL_KEY, email);
+    print('User email saved: ${prefs.getString(USER_EMAIL_KEY)}');
+  }
 
   Future<void> _login() async {
     final email = _usernameController.text;
@@ -41,11 +50,12 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (user != null) {
+        await _saveUserEmail(email);
+
         _userController.setUser(user);
         _userController.showSuccess('Login successful');
 
         if (_userController.isProvider) {
-          /*_userController.toProviderDashboard();*/
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const WelcomePage()),

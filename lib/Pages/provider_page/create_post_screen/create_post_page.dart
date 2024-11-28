@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:roomspot/utils/shared_prefs.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../../Models/post.dart';
 import '../services/image_helper.dart';
 
@@ -17,7 +22,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _squareController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  
+
   String _selectedGender = 'all';
   List<String> _utilities = [];
   List<File> _selectedImages = [];
@@ -35,10 +40,25 @@ class _CreatePostPageState extends State<CreatePostPage> {
     final images = await ImageHelper.pickImages(
       maxImages: 3 - _selectedImages.length,
     );
-    
+
     setState(() {
       _selectedImages.addAll(images);
     });
+  }
+
+  Future<String> _getUserId() async {
+    final userMail = SharedPrefs.getUserEmail();
+    try {
+      final jsonString =
+          await rootBundle.loadString('assets/data/common/user.json');
+      final jsonData = json.decode(jsonString);
+      final users = jsonData['users'] as List;
+
+      return users.firstWhere((user) => user['email'] == userMail)['id'];
+    } catch (e) {
+      print(e);
+      return '';
+    }
   }
 
   void _addUtility(String utility) {
@@ -65,7 +85,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       square: double.parse(_squareController.text),
       price: double.parse(_priceController.text),
       forGender: _selectedGender,
-      providerId: '1', // Should be current user ID
+      providerId: await _getUserId(), // Should be current user ID
       utilities: _utilities
           .asMap()
           .entries
@@ -76,7 +96,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
     // TODO: Add post to the list/database
     print(post.toJson());
-    
+
     // Show success message and navigate back
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Đăng bài thành công')),
