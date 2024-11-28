@@ -2,36 +2,26 @@
   "posts": [
     {
       "id": "1",
-      "title": "Phòng gác gần Gigamall",
-      "content": "Ký túc xá này gồm 3 tầng, Loại phòng A (vip) ở trên cùng với cửa sổ hướng ra bên ngoài và hướng\nra hành lang.\nNgoài ra còn có dịch vụ vệ sinh máy lạnh thường xuyên 3 tháng một lần. Nếu bạn cần trợ giúp, bạn có thể liên hệ với bảo vệ trực 24/7.",
-      "address": "Linh Đông, Thủ Đức",
+      "title": "Phòng kép gần khu công nghệ cao",
+      "content": "Phòng 30m2, có wifi, phòng tắm ngủ riêng",
+      "address": "Linh Trung, Thủ Đức",
       "status": "available",
+      "square": 30,
       "price": 1000000,
-      "provider": {
-        "id": "5",
-        "email": "hoangmtse161111@fpt.edu.vn",
-        "password": "1",
-        "phone": "",
-        "role": "provider",
-        "address": "Biên Hòa, Đồng Nai",
-        "fullName": "Mai Tiến Hoàng",
-        "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg"
-      },
+      "for": "male",
+      "providerId": "5",
       "utilities": [
         {
           "id": "1",
-          "name": "Wifi",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Wifi"
         },
         {
           "id": "2",
-          "name": "Phòng ngủ",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Phòng ngủ"
         },
         {
           "id": "3",
-          "name": "Phòng tắm",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Phòng tắm"
         }
       ],
       "ratings": [
@@ -68,54 +58,214 @@
           "checkIn": "2024-12-01",
           "checkOut": "2024-12-31"
         }
-      ]
+      ],
+        "wishlist": [
+        ]
     },
     {
       "id": "2",
-      "title": "Post 1",
-      "content": "Content 1",
+      "title": "Phòng gác gần Gigamall",
+      "content": "Ký túc xá này gồm 3 tầng, Loại phòng A (vip) ở trên cùng với cửa sổ hướng ra bên ngoài và hướng\nra hành lang.\nNgoài ra còn có dịch vụ vệ sinh máy lạnh thường xuyên 3 tháng một lần. Nếu bạn cần trợ giúp, bạn có thể liên hệ với bảo vệ trực 24/7.",
       "address": "Linh Đông, Thủ Đức",
+      "status": "available",
+      "square": 30,
       "price": 1000000,
-      "provider": {
-        "id": "5",
-        "email": "hoangmtse161111@fpt.edu.vn",
-        "password": "1",
-        "phone": "",
-        "role": "provider",
-        "address": "Biên Hòa, Đồng Nai",
-        "fullName": "Mai Tiến Hoàng",
-        "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg"
-      },
+      "for": "all",
+      "providerId": "1",
       "utilities": [
         {
           "id": "1",
-          "name": "Wifi",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Wifi"
         },
         {
           "id": "2",
-          "name": "Phòng ngủ",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Phòng ngủ"
         },
         {
           "id": "3",
-          "name": "Phòng tắm",
-          "icon": "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+          "name": "Phòng tắm"
+        },
+        {
+          "id": "4",
+          "name": "Phòng khách"
+        },
+        {
+          "id": "5",
+          "name": "Bếp"
         }
       ],
       "ratings": [
         {
           "id": "1",
-          "userId": "1",
+          "userId": "4",
           "rating": 5,
           "comment": "Good"
         },
         {
           "id": "2",
-          "userId": "2",
+          "userId": "6",
+          "rating": 4,
+          "comment": "Good"
+        },
+        {
+          "id": "3",
+          "userId": "7",
           "rating": 4,
           "comment": "Good"
         }
+      ],
+      "images": [
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+      ],
+      "orders": [
+        {
+          "id": "1",
+          "userId": "9",
+          "status": "pending",
+          "checkIn": "2024-12-01",
+          "checkOut": "2024-12-31"
+        },
+        {
+          "id": "2",
+          "userId": "4",
+          "status": "approved",
+          "checkIn": "2024-11-01",
+          "checkOut": "2024-12-31"
+        },
+        {
+          "id": "3",
+          "userId": "7",
+          "status": "approved",
+          "checkIn": "2024-11-01",
+          "checkOut": "2024-12-31"
+        }
+      ],
+        "wishlist": [
+        ]
+    },
+    {
+      "id": "3",
+      "title": "Phòng gần ngã 4 Thủ Đức",
+      "content": "5 phút đi bộ ra trạm xe buýt, 15 phút đi xe máy đến trường ĐH FPT",
+      "address": "Bình Thọ, Thủ Đức",
+      "status": "available",
+      "square": 30,
+      "price": 1100000,
+      "for": "female",
+      "providerId": "1",
+      "utilities": [
+        {
+          "id": "1",
+          "name": "Wifi"
+        },
+        {
+          "id": "2",
+          "name": "Phòng ngủ"
+        },
+        {
+          "id": "3",
+          "name": "Phòng tắm"
+        },
+        {
+          "id": "4",
+          "name": "Phòng khách"
+        },
+        {
+          "id": "5",
+          "name": "Bếp"
+        }
+      ],
+      "ratings": [
+        {
+          "id": "1",
+          "userId": "4",
+          "rating": 5,
+          "comment": "Good"
+        },
+        {
+          "id": "2",
+          "userId": "6",
+          "rating": 4,
+          "comment": "Good"
+        },
+        {
+          "id": "3",
+          "userId": "7",
+          "rating": 4,
+          "comment": "Good"
+        }
+      ],
+      "images": [
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+      ],
+      "orders": [
+        {
+          "id": "1",
+          "userId": "9",
+          "status": "pending",
+          "checkIn": "2024-12-01",
+          "checkOut": "2024-12-31"
+        },
+        {
+          "id": "2",
+          "userId": "4",
+          "status": "approved",
+          "checkIn": "2024-11-01",
+          "checkOut": "2024-12-31"
+        },
+        {
+          "id": "3",
+          "userId": "7",
+          "status": "approved",
+          "checkIn": "2024-11-01",
+          "checkOut": "2024-12-31"
+        }
+      ],
+        "wishlist": [
+            {
+            "id": "2",
+            "userId": "3"
+            }
+        ]
+    },
+    {
+      "id": "4",
+      "title": "Phòng gần chợ Nhỏ Quận 9",
+      "content": "Phòng 20m2 có wifi, chỗ đậu xe, có gác",
+      "address": "Linh Đông, Thủ Đức",
+      "status": "available",
+      "square": 20,
+      "price": 1800000,
+      "for": "all",
+      "providerId": "5",
+      "utilities": [
+        {
+          "id": "1",
+          "name": "Wifi"
+        },
+        {
+          "id": "2",
+          "name": "Gác"
+        },
+        {
+          "id": "3",
+          "name": "Bãi xe"
+        }
+      ],
+      "ratings": [
+      ],
+      "images": [
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6",
+        "https://cloudflare-ipfs.com/ipfs/QmZQ6"
+      ],
+      "orders": [
+      ],
+      "wishlist": [
       ]
     }
   ]
