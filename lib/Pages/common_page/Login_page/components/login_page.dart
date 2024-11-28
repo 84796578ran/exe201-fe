@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:get/get.dart';
 import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:roomspot/Pages/provider_page/controllers/user_controller.dart';
@@ -22,30 +21,35 @@ class _LoginPageState extends State<LoginPage> {
   final _userController = UserController.to;
 
   Future<void> _login() async {
-    final username = _usernameController.text;
+    final email = _usernameController.text;
     final password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty) {
-      _userController.showError('Please enter username and password');
+    if (email.isEmpty || password.isEmpty) {
+      _userController.showError('Please enter email and password');
       return;
     }
 
     try {
-      final jsonString = await rootBundle.loadString('assets/data/common/user.json');
+      final jsonString =
+          await rootBundle.loadString('assets/data/common/user.json');
       final jsonData = json.decode(jsonString);
       final users = jsonData['users'] as List;
 
       final user = users.firstWhere(
-        (u) => u['username'] == username && u['password'] == password,
+        (u) => u['email'] == email && u['password'] == password,
         orElse: () => null,
       );
 
       if (user != null) {
         _userController.setUser(user);
         _userController.showSuccess('Login successful');
-        
+
         if (_userController.isProvider) {
-          _userController.toProviderDashboard();
+          /*_userController.toProviderDashboard();*/
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WelcomePage()),
+          );
         } else {
           _userController.toHome();
         }
