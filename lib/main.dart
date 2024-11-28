@@ -1,21 +1,19 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:roomspot/Pages/common_page/Login_page/components/login_page.dart';
-import 'package:roomspot/Pages/customer_page/screen/service_screen/Service_screen.dart';
-
+import 'Pages/provider_page/controllers/user_controller.dart';
 
 void main() {
+  Get.put(UserController());
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -47,7 +45,8 @@ class MyHomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/image/splashScreen.jpg'), // Đường dẫn hình nền
+            image: AssetImage(
+                'assets/image/splashScreen.jpg'), // Đường dẫn hình nền
             fit: BoxFit.cover, // Tùy chỉnh hình nền full màn hình
           ),
         ),
@@ -77,15 +76,15 @@ class MyHomePage extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginPage()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // Bo góc nút
                   ),
@@ -105,4 +104,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-

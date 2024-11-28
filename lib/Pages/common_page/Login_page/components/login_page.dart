@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:get/get.dart';
 import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
 import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
+import 'package:roomspot/Pages/provider_page/controllers/user_controller.dart';
 
 class LoginPage extends StatefulWidget {
   static const path = '/login';
@@ -17,64 +19,41 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
+  final _userController = UserController.to;
 
   Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-    });
+    final username = _usernameController.text;
+    final password = _passwordController.text;
 
-    String username = _usernameController.text;
-    String password = _passwordController.text;
+    if (username.isEmpty || password.isEmpty) {
+      _userController.showError('Please enter username and password');
+      return;
+    }
 
     try {
-      // Load and parse the JSON file
-      final String jsonString =
-          await rootBundle.loadString('assets/data/common/user.json');
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final List<dynamic> users = jsonData['users'];
+      final jsonString = await rootBundle.loadString('assets/data/common/user.json');
+      final jsonData = json.decode(jsonString);
+      final users = jsonData['users'] as List;
 
-      // Find user with matching credentials
       final user = users.firstWhere(
-        (user) => user['username'] == username && user['password'] == password,
+        (u) => u['username'] == username && u['password'] == password,
         orElse: () => null,
       );
 
       if (user != null) {
-        // Login successful
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đăng nhập thành công'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to welcome page after a short delay
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()),
-        );
+        _userController.setUser(user);
+        _userController.showSuccess('Login successful');
+        
+        if (_userController.isProvider) {
+          _userController.toProviderDashboard();
+        } else {
+          _userController.toHome();
+        }
       } else {
-        // Login failed
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tên đăng nhập hoặc mật khẩu không đúng'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        _userController.showError('Invalid credentials');
       }
     } catch (e) {
-      print('Error during login: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Có lỗi xảy ra khi đăng nhập'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      _userController.showError('Login failed: $e');
     }
   }
 
