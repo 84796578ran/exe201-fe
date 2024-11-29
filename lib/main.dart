@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roomspot/Pages/common_page/Login_page/components/login_page.dart';
 import 'Pages/provider_page/controllers/user_controller.dart';
+import 'Pages/provider_page/controllers/post_controller.dart';
 
 void main() {
   Get.put(UserController());
+  Get.put(PostController());
   runApp(const MyApp());
 }
 
