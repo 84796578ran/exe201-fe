@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../Models/post.dart';
 import '../services/image_helper.dart';
+import '../controllers/post_controller.dart';
 
 class CreatePostPage extends StatefulWidget {
   @override
@@ -77,7 +78,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final post = Post(
-      id: const Uuid().v4(), // Generate unique ID
+      id: "0",
       title: _titleController.text,
       content: _contentController.text,
       address: _addressController.text,
@@ -85,23 +86,26 @@ class _CreatePostPageState extends State<CreatePostPage> {
       square: double.parse(_squareController.text),
       price: double.parse(_priceController.text),
       forGender: _selectedGender,
-      providerId: await _getUserId(), // Should be current user ID
+      providerId: await _getUserId(),
       utilities: _utilities
           .asMap()
           .entries
           .map((e) => Utility(id: (e.key + 1).toString(), name: e.value))
           .toList(),
       images: _selectedImages.map((file) => file.path).toList(),
+      ratings: [],
+      orders: [],
+      wishlist: [],
     );
 
-    // TODO: Add post to the list/database
-    print(post.toJson());
-
-    // Show success message and navigate back
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Đăng bài thành công')),
-    );
-    Navigator.pop(context);
+    try {
+      await PostController.to.createPost(post);
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating post: ${e.toString()}')),
+      );
+    }
   }
 
   @override
