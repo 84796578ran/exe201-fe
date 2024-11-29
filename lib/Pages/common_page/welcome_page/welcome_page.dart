@@ -44,9 +44,8 @@ class WelcomePage extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacement(
-                      context, 
-                      MaterialPageRoute(builder: (context) => const ProviderNavbar()
-                         ),
+                        context, 
+                        MaterialPageRoute(builder: (context) => const ProviderNavbar()),
                       );
                     },
                     child: const Text("Nhà cung cấp"),

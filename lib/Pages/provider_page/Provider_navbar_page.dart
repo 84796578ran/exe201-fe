@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/Pages/provider_page/create_post_screen/create_post_page.dart';
 
 class ProviderNavbar extends StatefulWidget {
   const ProviderNavbar({super.key});
@@ -25,9 +26,10 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.search),
-            label: 'Tìm kiếm',
+            icon: Badge(
+              child: Icon(Icons.add_home),
+            ),
+            label: 'Trang chủ',
           ),
           NavigationDestination(
             icon: Badge(child: Icon(Icons.notification_add_outlined)),
@@ -35,44 +37,56 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
           ),
           NavigationDestination(
             icon: Badge(
-              label: Text('2'),
-              child: Icon(Icons.add_home),
-            ),
-            label: 'Trang chủ',
-          ),
-          NavigationDestination(
-            icon: Badge(
-              label: Text('3'),
               child: Icon(Icons.messenger_sharp),
             ),
             label: 'Tin nhắn',
           ),
           NavigationDestination(
             icon: Badge(
-              label: Text('5'),
               child: Icon(Icons.boy),
             ),
             label: 'Thông tin cá nhân',
           ),
         ],
       ),
+      floatingActionButton: currentPageIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreatePostPage()),
+                );
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: [
-        Center(
-          child: Text(
-            'Tìm kiếm',
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
-        Center(
-          child: Text(
-            'Yêu thích',
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
         Center(
           child: Text(
             'Trang chủ',
             style: theme.textTheme.titleLarge,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Card(
+                child: ListTile(
+                  leading: Icon(Icons.notifications_sharp),
+                  title: Text('Notification 1'),
+                  subtitle: Text('This is a notification'),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  leading: Icon(Icons.notifications_sharp),
+                  title: Text('Notification 2'),
+                  subtitle: Text('This is a notification'),
+                ),
+              ),
+            ],
           ),
         ),
         ListView.builder(
@@ -115,25 +129,10 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
             );
           },
         ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
+        Center(
+          child: Text(
+            'Thông tin cá nhân',
+            style: theme.textTheme.titleLarge,
           ),
         ),
       ][currentPageIndex],
