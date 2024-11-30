@@ -10,6 +10,7 @@ class UserController extends GetxController {
   bool get isLoggedIn => _currentUser.value != null;
   bool get isProvider => _currentUser.value?.role == 'provider';
   bool get isAdmin => _currentUser.value?.role == 'admin';
+  bool get renter => _currentUser.value?.role == 'renter';
 
   @override
   void onInit() {

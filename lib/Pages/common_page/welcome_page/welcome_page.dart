@@ -3,25 +3,38 @@ import 'package:roomspot/Pages/customer_page/screen/service_screen/Service_scree
 import 'package:roomspot/Pages/provider_page/Provider_navbar_page.dart';
 
 class WelcomePage extends StatelessWidget {
-  static const path ="/welcome";
+  static const path = "/welcome";
   const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text.rich(
-            TextSpan(
-            children: [
-              const TextSpan(text: "Bạn muốn cho thuê phòng\n"),
-              const TextSpan(text: "hay thuê phòng"),
-
-            ]
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(150), // Tăng chiều cao AppBar
+        child: AppBar(
+          centerTitle: true, // Đặt tiêu đề ở giữa
+          backgroundColor: Colors.blue,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(top: 40), // Di chuyển nội dung xuống
+            child: Center(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(text: "Bạn muốn đăng kí cho \n"),
+                    const TextSpan(text: "thuê phòng hay thuê phòng"),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24, // Tăng kích thước font chữ
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          textAlign: TextAlign.center,
-        )
+          ),
+        ),
       ),
-
       body: Center(
         child: Column(
           children: <Widget>[
@@ -38,23 +51,24 @@ class WelcomePage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text("Khách hàng"),
+                  child: const Text("Khách hàng", style: TextStyle(fontSize: 20),),
+
                 ),
-                const SizedBox(width: 20) ,
+                const SizedBox(width: 30),
                 ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context, 
-                        MaterialPageRoute(builder: (context) => const ProviderNavbar()),
-                      );
-                    },
-                    child: const Text("Nhà cung cấp"),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProviderNavbar()),
+                    );
+                  },
+                  child: const Text("Nhà cung cấp", style: TextStyle(fontSize: 20),),
                 ),
               ],
             )
           ],
         ),
-      )
+      ),
     );
   }
 }

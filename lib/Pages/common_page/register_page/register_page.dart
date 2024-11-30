@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 
 class RegistrationPage extends StatefulWidget {
   static const path = "/registration";
@@ -36,9 +37,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "id": "1"
     };
     print("User Data: $userData");
-    // Xử lý đăng ký (gửi đến server hoặc lưu cục bộ)
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Đăng ký thành công!")),
+    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomePage())
     );
   }
 
