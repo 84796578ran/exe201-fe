@@ -1,13 +1,14 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../Models/post.dart';
+import '../../../repositories/post_repository.dart';
 import 'base_controller.dart';
 import 'user_controller.dart';
 
 class PostController extends BaseController {
-  final RxList<dynamic> posts = <dynamic>[].obs;
-  final RxList<dynamic> filteredPosts = <dynamic>[].obs;
+  final PostRepository _postRepository = PostRepository.instance;
+  final UserController userController = UserController.to;
+  final RxList<Post> posts = <Post>[].obs;
+  final RxList<Post> filteredPosts = <Post>[].obs;
   final RxString searchQuery = ''.obs;
   static PostController get to => Get.find();
 
@@ -19,19 +20,18 @@ class PostController extends BaseController {
 
   Future<void> loadPosts() async {
     return handleError(() async {
-      final String response = await rootBundle.loadString('assets/data/provider/post.json');
-      final data = json.decode(response);
-      final userController = UserController.to;
-
+      List<Post> loadedPosts;
+      
       if (userController.isAdmin) {
-        posts.value = data['posts'];
+        // Get all posts
+        loadedPosts = await _postRepository.getAllPosts();
       } else {
-        posts.value = data['posts'].where((post) =>
-          post['providerId'] == userController.user?.id
-        ).toList();
+        // Get posts for specific provider
+        loadedPosts = await _postRepository.getPostsByProvider(userController.user!.id);
       }
       
-      filteredPosts.value = posts;
+      posts.value = loadedPosts;
+      filteredPosts.value = loadedPosts;
     });
   }
 
@@ -44,11 +44,11 @@ class PostController extends BaseController {
 
     final lowercaseQuery = query.toLowerCase();
     filteredPosts.value = posts.where((post) {
-      final title = post['title'].toString().toLowerCase();
-      final address = post['address'].toString().toLowerCase();
-      final forGender = post['for'].toString().toLowerCase();
-      final utilities = (post['utilities'] as List)
-          .map((u) => u['name'].toString().toLowerCase())
+      final title = post.title.toLowerCase();
+      final address = post.address.toLowerCase();
+      final forGender = post.forGender.toLowerCase();
+      final utilities = post.utilities
+          .map((u) => u.name.toLowerCase())
           .join(' ');
 
       return title.contains(lowercaseQuery) ||
@@ -60,35 +60,8 @@ class PostController extends BaseController {
 
   Future<void> createPost(Post newPost) async {
     return handleError(() async {
-      // Load current posts
-      final String response = await rootBundle.loadString('assets/data/provider/post.json');
-      final data = json.decode(response);
-      final currentPosts = List<Map<String, dynamic>>.from(data['posts']);
-      
-      // Get the highest ID and increment by 1
-      int maxId = 0;
-      for (var post in currentPosts) {
-        int currentId = int.parse(post['id']);
-        if (currentId > maxId) {
-          maxId = currentId;
-        }
-      }
-      
-      // Set the new post ID
-      newPost.id = (maxId + 1).toString();
-      
-      // Add the new post to the list
-      currentPosts.add(newPost.toJson());
-      
-      // Update the posts list
-      data['posts'] = currentPosts;
-      
-      // Convert back to JSON string
-      final String updatedJson = json.encode(data);
-      
-      // For now, just print the JSON as we can't write to assets in production
-      print('Updated JSON:');
-      print(updatedJson);
+      // Create post in database
+      await _postRepository.createPost(newPost);
       
       // Reload posts
       await loadPosts();
@@ -97,6 +70,32 @@ class PostController extends BaseController {
       Get.snackbar(
         'Success',
         'Post created successfully',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    });
+  }
+
+  Future<void> updatePost(Post post) async {
+    return handleError(() async {
+      await _postRepository.updatePost(post);
+      await loadPosts();
+      
+      Get.snackbar(
+        'Success',
+        'Post updated successfully',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    });
+  }
+
+  Future<void> deletePost(String id) async {
+    return handleError(() async {
+      await _postRepository.deletePost(id);
+      await loadPosts();
+      
+      Get.snackbar(
+        'Success',
+        'Post deleted successfully',
         snackPosition: SnackPosition.BOTTOM,
       );
     });

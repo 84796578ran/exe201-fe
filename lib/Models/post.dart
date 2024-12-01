@@ -31,22 +31,43 @@ class Post {
     this.wishlist = const [],
   });
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'content': content,
-        'address': address,
-        'status': status,
-        'square': square,
-        'price': price,
-        'for': forGender,
-        'providerId': providerId,
-        'utilities': utilities.map((u) => u.toJson()).toList(),
-        'ratings': ratings.map((r) => r.toJson()).toList(),
-        'images': images,
-        'orders': orders.map((o) => o.toJson()).toList(),
-        'wishlist': wishlist.map((w) => w.toJson()).toList(),
-      };
+  // Create from database record
+  factory Post.fromDb(Map<String, dynamic> map, {
+    List<Utility> utilities = const [],
+    List<Rating> ratings = const [],
+    List<Order> orders = const [],
+    List<Wishlist> wishlist = const [],
+  }) {
+    return Post(
+      id: map['id'],
+      title: map['title'],
+      content: map['content'],
+      address: map['address'],
+      status: map['status'],
+      square: map['square'],
+      price: map['price'],
+      forGender: map['forGender'],
+      providerId: map['providerId'],
+      utilities: utilities,
+      ratings: ratings,
+      orders: orders,
+      wishlist: wishlist,
+      images: const [], // Handle images separately
+    );
+  }
+
+  // Convert to database record
+  Map<String, dynamic> toDb() => {
+    'id': id,
+    'title': title,
+    'content': content,
+    'address': address,
+    'status': status,
+    'square': square,
+    'price': price,
+    'forGender': forGender,
+    'providerId': providerId,
+  };
 }
 
 class Utility {
