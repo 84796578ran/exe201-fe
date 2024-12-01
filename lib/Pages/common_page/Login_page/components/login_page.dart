@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:roomspot/Pages/common_page/register_page/register_page.dart';
-import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:roomspot/Pages/customer_page/Home_screen/home_screen.dart';
 import 'package:roomspot/Pages/customer_page/customer_navbar_page.dart';
 import 'package:roomspot/Pages/provider_page/Provider_navbar_page.dart';
-import 'package:roomspot/Pages/provider_page/controllers/user_controller.dart';
+import 'package:roomspot/repositories/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String USER_EMAIL_KEY = 'user_email';
@@ -23,66 +20,68 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  final _userController = UserController.to;
+  final UserRepository _userRepository = UserRepository.instance;
 
-  /// Lưu email người dùng vào SharedPreferences
+  /// Save user email to SharedPreferences
   Future<void> _saveUserEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(USER_EMAIL_KEY, email);
-    print('User email saved: ${prefs.getString(USER_EMAIL_KEY)}');
   }
 
-  /// Xử lý đăng nhập
+  /// Handle login
   Future<void> _login() async {
     final email = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Kiểm tra xem các trường có rỗng không
+    // Check for empty fields
     if (email.isEmpty || password.isEmpty) {
-      _userController.showError('Vui lòng nhập email và mật khẩu');
+      _showError('Vui lòng nhập email và mật khẩu');
       return;
     }
 
     try {
-      // Tải dữ liệu từ file JSON
-      final jsonString =
-      await rootBundle.loadString('assets/data/common/user.json');
-      final jsonData = json.decode(jsonString);
-      final users = jsonData['users'] as List;
+      // Get user from database
+      final user = await _userRepository.getUserByEmail(email);
 
-      // Tìm người dùng
-      final user = users.firstWhere(
-            (u) => u['email'] == email && u['password'] == password,
-        orElse: () => null, // Trả về null nếu không tìm thấy
-      );
-
-      if (user != null) {
-        // Lưu email và cập nhật trạng thái người dùng
+      if (user != null && user.password == password) {
+        // Save email
         await _saveUserEmail(email);
-        _userController.setUser(user);
 
-        // Hiển thị thông báo thành công
-        _userController.showSuccess('Đăng nhập thành công');
+        if (mounted) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Đăng nhập thành công')),
+          );
 
-        // Điều hướng dựa trên vai trò
-        if (_userController.isProvider) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const ProviderNavbar()),
-          );
-        } else if (_userController.renter) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const CustomerHomePage(child: HomeScreen())),
-          );
+          // Navigate based on role
+          if (user.role == 'provider') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ProviderNavbar()),
+            );
+          } else if (user.role == 'renter') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CustomerHomePage(child: HomeScreen())),
+            );
+          }
         }
       } else {
-        _userController.showError('Tài khoản hoặc mật khẩu không đúng');
+        if (mounted) {
+          _showError('Tài khoản hoặc mật khẩu không đúng');
+        }
       }
     } catch (e) {
-      // Xử lý lỗi (ví dụ: file JSON không hợp lệ)
-      _userController.showError('Đăng nhập thất bại: $e');
+      if (mounted) {
+        _showError('Đăng nhập thất bại: $e');
+      }
     }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override

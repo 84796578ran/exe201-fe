@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/post_controller.dart';
@@ -107,4 +108,5 @@ class ProviderPostList extends GetView<UserController> {
       ),
     );
   }
-} 
+}
+*/
