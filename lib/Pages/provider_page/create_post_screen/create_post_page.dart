@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:roomspot/repositories/post_repository.dart';
+import 'package:roomspot/repositories/user_repository.dart';
 import 'package:roomspot/utils/shared_prefs.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../Models/post.dart';
 import '../services/image_helper.dart';
-import '../controllers/post_controller.dart';
 
 class CreatePostPage extends StatefulWidget {
   @override
@@ -23,42 +19,72 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _squareController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final UserRepository _userRepository = UserRepository.instance;
+  final PostRepository _postRepository = PostRepository.instance;
 
   String _selectedGender = 'all';
   List<String> _utilities = [];
-  List<File> _selectedImages = [];
+  List<PostImage> _selectedImages = [];
 
   Future<void> _pickImage() async {
     if (_selectedImages.length >= 3) {
-      Get.snackbar(
-        'Warning',
-        'Maximum 3 images allowed',
-        snackPosition: SnackPosition.BOTTOM,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Maximum 3 images allowed')),
       );
       return;
     }
 
-    final images = await ImageHelper.pickImages(
-      maxImages: 3 - _selectedImages.length,
-    );
+    try {
+      final files = await ImageHelper.pickImages(
+        maxImages: 3 - _selectedImages.length,
+      );
 
-    setState(() {
-      _selectedImages.addAll(images);
-    });
+      if (files.isEmpty) return;
+
+      final newImages = await Future.wait(
+        files.map((file) async {
+          final bytes = await file.readAsBytes();
+          return PostImage(
+            id: const Uuid().v4(),
+            postId: "0",
+            url: bytes,
+          );
+        }),
+      );
+
+      setState(() {
+        _selectedImages.addAll(newImages);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking images: ${e.toString()}')),
+      );
+    }
   }
 
-  Future<String> _getUserId() async {
-    final userMail = SharedPrefs.getUserEmail();
+  Future<String?> _getUserId() async {
+    final userMail = await SharedPrefs.getUserEmail();
+    if (userMail == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User not found')),
+      );
+      return null;
+    }
     try {
-      final jsonString =
-          await rootBundle.loadString('assets/data/common/user.json');
-      final jsonData = json.decode(jsonString);
-      final users = jsonData['users'] as List;
+      final userDb = await _userRepository.getUserByEmail(userMail);
+      if (userDb == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not found')),
+        );
+        return null;
+      }
 
-      return users.firstWhere((user) => user['email'] == userMail)['id'];
+      return userDb.id;
     } catch (e) {
-      print(e);
-      return '';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error getting user: ${e.toString()}')),
+      );
+      return null;
     }
   }
 
@@ -77,35 +103,92 @@ class _CreatePostPageState extends State<CreatePostPage> {
   Future<void> _createPost() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final post = Post(
-      id: "0",
-      title: _titleController.text,
-      content: _contentController.text,
-      address: _addressController.text,
-      status: 'available',
-      square: double.parse(_squareController.text),
-      price: double.parse(_priceController.text),
-      forGender: _selectedGender,
-      providerId: await _getUserId(),
-      utilities: _utilities
-          .asMap()
-          .entries
-          .map((e) => Utility(id: (e.key + 1).toString(), name: e.value))
-          .toList(),
-      images: _selectedImages.map((file) => file.path).toList(),
-      ratings: [],
-      orders: [],
-      wishlist: [],
-    );
+    if (_selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add at least one image')),
+      );
+      return;
+    }
+
+    final userId = await _getUserId();
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not get user ID')),
+      );
+      return;
+    }
 
     try {
-      await PostController.to.createPost(post);
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error creating post: ${e.toString()}')),
+      final postId = const Uuid().v4();
+
+      final post = Post(
+        id: postId,
+        title: _titleController.text,
+        content: _contentController.text,
+        address: _addressController.text,
+        status: 'available',
+        square: double.parse(_squareController.text),
+        price: double.parse(_priceController.text),
+        forGender: _selectedGender,
+        providerId: userId,
+        utilities: _utilities
+            .map((utility) => Utility(
+                  id: const Uuid().v4(),
+                  name: utility,
+                ))
+            .toList(),
+        images: _selectedImages
+            .map((img) => PostImage(
+                  id: img.id,
+                  postId: postId,
+                  url: img.url,
+                ))
+            .toList(),
+        ratings: [],
+        orders: [],
+        wishlist: [],
       );
+
+      await _postRepository.createPost(post);
+
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error creating post: ${e.toString()}')),
+        );
+      }
     }
+  }
+
+  Widget _buildImagePreview(PostImage image) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.memory(
+            image.url,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          right: 0,
+          top: 0,
+          child: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              setState(() {
+                _selectedImages.remove(image);
+              });
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -284,31 +367,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    ..._selectedImages.map((image) => Stack(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.file(
-                                image,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedImages.remove(image);
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        )),
+                    ..._selectedImages.map(_buildImagePreview),
                     if (_selectedImages.length < 3)
                       Padding(
                         padding: const EdgeInsets.all(8.0),

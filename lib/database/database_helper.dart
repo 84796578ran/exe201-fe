@@ -105,6 +105,16 @@ class DatabaseHelper {
     )
     ''');
 
+    // Post images table with foreign key to posts
+    await db.execute('''
+    CREATE TABLE post_images (
+      id TEXT PRIMARY KEY,
+      postId TEXT NOT NULL,
+      url BLOB NOT NULL,
+      FOREIGN KEY (postId) REFERENCES posts (id)
+    )
+    ''');
+
     // Load initial data
     await _loadInitialData(db);
   }
@@ -198,6 +208,17 @@ class DatabaseHelper {
         });
         wishlistId++;
       }
+
+      // Note: We're intentionally skipping loading images during initialization
+      // Images will be handled when actual posts are created through the app
     }
+  }
+
+  Future<void> deleteDatabase() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'roomspot.db');
+    
+    await databaseFactory.deleteDatabase(path);
+    _database = null; // Reset the database instance
   }
 } 
