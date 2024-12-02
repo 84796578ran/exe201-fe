@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class MessageScreen extends StatefulWidget {
-  static const path ="/messageScreen";
+class MessageScreen extends StatelessWidget {
+  static const path = "/message";
   const MessageScreen({super.key});
 
   @override
-  State<MessageScreen> createState() => _MessageScreenState();
-}
-
-class _MessageScreenState extends State<MessageScreen> {
-  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Text('Tin nhắn'),
+      ),
+    );
   }
 }

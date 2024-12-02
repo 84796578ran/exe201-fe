@@ -114,6 +114,7 @@ class Rating {
 class Order {
   String id;
   String userId;
+  String postId;
   String status;
   String checkIn;
   String checkOut;
@@ -121,6 +122,7 @@ class Order {
   Order({
     required this.id,
     required this.userId,
+    required this.postId,
     required this.status,
     required this.checkIn,
     required this.checkOut,
@@ -129,10 +131,31 @@ class Order {
   Map<String, dynamic> toJson() => {
         'id': id,
         'userId': userId,
+        'postId': postId,
         'status': status,
         'checkIn': checkIn,
         'checkOut': checkOut,
       };
+
+  Map<String, dynamic> toDb() => {
+        'id': id,
+        'userId': userId,
+        'postId': postId,
+        'status': status,
+        'checkIn': checkIn,
+        'checkOut': checkOut,
+      };
+
+  factory Order.fromDb(Map<String, dynamic> map) {
+    return Order(
+      id: map['id'] as String,
+      userId: map['userId'] as String,
+      postId: map['postId'] as String,
+      status: map['status'] as String,
+      checkIn: map['checkIn'] as String,
+      checkOut: map['checkOut'] as String,
+    );
+  }
 }
 
 class Wishlist {
