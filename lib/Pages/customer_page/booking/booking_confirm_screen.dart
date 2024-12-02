@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:roomspot/Pages/customer_page/booking/booking_success_screen.dart';
 
 import '../../../Models/post.dart';
+import '../../../Models/user.dart';
 import '../../../repositories/order_repository.dart';
+import '../../../repositories/user_repository.dart';
 import '../../../utils/shared_prefs.dart';
 
 class BookingConfirmScreen extends StatelessWidget {
@@ -34,9 +36,14 @@ class BookingConfirmScreen extends StatelessWidget {
         throw Exception('User not logged in');
       }
 
+      final User? user = await UserRepository.instance.getUserByEmail(userEmail);
+      if (user == null) {
+        throw Exception('User not found');
+      }
+
       final order = Order(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: userEmail,
+        userId: user.id,
         postId: post.id,
         status: 'pending',
         checkIn: _formatDate(checkIn),

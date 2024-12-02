@@ -1,62 +1,112 @@
 import 'package:flutter/material.dart';
+
 import '../../../Models/post.dart';
 import '../../../Models/user.dart';
 import '../../../repositories/order_repository.dart';
 import '../../../repositories/user_repository.dart';
-import '../../../repositories/post_repository.dart';
 
-class OrderDetailScreen extends StatefulWidget {
+class ProviderOrderDetailScreen extends StatefulWidget {
   final Order order;
   final Post post;
 
-  const OrderDetailScreen({
+  const ProviderOrderDetailScreen({
     super.key,
     required this.order,
     required this.post,
   });
 
   @override
-  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+  State<ProviderOrderDetailScreen> createState() =>
+      _ProviderOrderDetailScreenState();
 }
 
-class _OrderDetailScreenState extends State<OrderDetailScreen> {
+class _ProviderOrderDetailScreenState extends State<ProviderOrderDetailScreen> {
+  final OrderRepository _orderRepository = OrderRepository.instance;
   final UserRepository _userRepository = UserRepository.instance;
   bool _isLoading = true;
-  User? _provider;
+  User? _renter;
 
   @override
   void initState() {
     super.initState();
-    _loadProviderInfo();
+    _loadRenterInfo();
   }
 
-  Future<void> _loadProviderInfo() async {
+  Future<void> _loadRenterInfo() async {
     try {
-      final provider = await _userRepository.getUser(widget.post.providerId);
+      final renter = await _userRepository.getUser(widget.order.userId);
       setState(() {
-        _provider = provider;
+        _renter = renter;
         _isLoading = false;
       });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading provider info: ${e.toString()}')),
+          SnackBar(content: Text('Error loading renter info: ${e.toString()}')),
         );
       }
       setState(() => _isLoading = false);
     }
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return Colors.orange;
-      case 'accepted':
-        return Colors.green;
-      case 'canceled':
-        return Colors.red;
-      default:
-        return Colors.grey;
+  Future<void> _showStatusUpdateConfirmation(String newStatus) async {
+    final String actionText = newStatus == 'accepted' ? 'chấp nhận' : 'từ chối';
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Xác nhận $actionText đơn'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Bạn có chắc chắn muốn $actionText đơn này không?'),
+            const SizedBox(height: 16),
+            Text('Thông tin đơn:'),
+            Text('- Người thuê: ${_renter?.fullName ?? "N/A"}'),
+            Text('- Phòng: ${widget.post.title}'),
+            Text('- Ngày nhận: ${widget.order.checkIn}'),
+            Text('- Ngày trả: ${widget.order.checkOut}'),
+            const SizedBox(height: 8),
+            const Text('Lưu ý: Hành động này không thể hoàn tác.',
+                style: TextStyle(color: Colors.red)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Không'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Có'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      await _updateOrderStatus(newStatus);
+    }
+  }
+
+  Future<void> _updateOrderStatus(String newStatus) async {
+    setState(() => _isLoading = true);
+    try {
+      await _orderRepository.updateOrderStatus(widget.order.id, newStatus);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cập nhật trạng thái thành công')),
+        );
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi cập nhật: ${e.toString()}')),
+        );
+      }
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -73,11 +123,47 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return Colors.orange;
+      case 'accepted':
+        return Colors.green;
+      case 'canceled':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chi tiết đơn đặt phòng'),
+        actions: [
+          if (widget.order.status.toLowerCase() == 'pending')
+            Row(
+              children: [
+                TextButton.icon(
+                  onPressed: () => _showStatusUpdateConfirmation('accepted'),
+                  icon: const Icon(Icons.check_circle_outline, size: 20),
+                  label: const Text('Chấp nhận'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.green,
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () => _showStatusUpdateConfirmation('canceled'),
+                  icon: const Icon(Icons.cancel_outlined, size: 20),
+                  label: const Text('Từ chối'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -114,9 +200,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Provider Info
+                  // Renter Info
                   const Text(
-                    'Thông tin chủ trọ',
+                    'Thông tin người thuê',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -126,16 +212,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Card(
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Icon(_provider?.avatar != null
+                        child: Icon(_renter?.avatar != null
                             ? Icons.person
                             : Icons.person_outline),
                       ),
-                      title: Text(_provider?.fullName ?? 'N/A'),
+                      title: Text(_renter?.fullName ?? 'N/A'),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_provider?.email ?? 'N/A'),
-                          Text(_provider?.phone ?? 'N/A'),
+                          Text(_renter?.email ?? 'N/A'),
+                          Text(_renter?.phone ?? 'N/A'),
                         ],
                       ),
                       isThreeLine: true,
@@ -228,4 +314,4 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
     );
   }
-} 
+}

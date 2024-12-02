@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -121,13 +123,14 @@ class DatabaseHelper {
 
   Future<void> _loadInitialData(Database db) async {
     // Load users
-    final String userJson = await rootBundle.loadString('assets/data/common/user.json');
+    final String userJson =
+        await rootBundle.loadString('assets/data/common/user.json');
     final userData = json.decode(userJson);
     int userId = 1;
-    
+
     for (var user in userData['users']) {
       await db.insert('users', {
-        'id': userId.toString(),  // Auto-generated ID
+        'id': userId.toString(), // Auto-generated ID
         'email': user['email'],
         'password': user['password'],
         'fullName': user['fullName'],
@@ -140,7 +143,8 @@ class DatabaseHelper {
     }
 
     // Load posts
-    final String postJson = await rootBundle.loadString('assets/data/provider/post.json');
+    final String postJson =
+        await rootBundle.loadString('assets/data/provider/post.json');
     final postData = json.decode(postJson);
     int postId = 1;
     int utilityId = 1;
@@ -152,7 +156,7 @@ class DatabaseHelper {
       // Insert post
       final currentPostId = postId.toString();
       await db.insert('posts', {
-        'id': currentPostId,  // Auto-generated ID
+        'id': currentPostId,
         'title': post['title'],
         'content': post['content'],
         'address': post['address'],
@@ -167,7 +171,7 @@ class DatabaseHelper {
       // Insert utilities
       for (var utility in post['utilities']) {
         await db.insert('utilities', {
-          'id': utilityId.toString(),  // Auto-generated ID
+          'id': utilityId.toString(), // Auto-generated ID
           'name': utility['name'],
           'postId': currentPostId,
         });
@@ -177,7 +181,7 @@ class DatabaseHelper {
       // Insert ratings
       for (var rating in post['ratings']) {
         await db.insert('ratings', {
-          'id': ratingId.toString(),  // Auto-generated ID
+          'id': ratingId.toString(), // Auto-generated ID
           'userId': rating['userId'],
           'postId': currentPostId,
           'rating': rating['rating'],
@@ -189,7 +193,7 @@ class DatabaseHelper {
       // Insert orders
       for (var order in post['orders']) {
         await db.insert('orders', {
-          'id': orderId.toString(),  // Auto-generated ID
+          'id': orderId.toString(), // Auto-generated ID
           'userId': order['userId'],
           'postId': currentPostId,
           'status': order['status'],
@@ -202,23 +206,40 @@ class DatabaseHelper {
       // Insert wishlist
       for (var wish in post['wishlist']) {
         await db.insert('wishlist', {
-          'id': wishlistId.toString(),  // Auto-generated ID
+          'id': wishlistId.toString(), // Auto-generated ID
           'userId': wish['userId'],
           'postId': currentPostId,
         });
         wishlistId++;
       }
 
-      // Note: We're intentionally skipping loading images during initialization
-      // Images will be handled when actual posts are created through the app
+      // Handle post images
+      final images = post['images'] as List;
+      for (var image in images) {
+        try {
+          // Convert base64 string to binary data
+          final String base64String = image['url'];
+          final Uint8List imageBytes = base64Decode(base64String);
+          
+          await db.insert('post_images', {
+            'id': image['id'],
+            'postId': currentPostId,
+            'url': imageBytes,
+          });
+        } catch (e) {
+          print('Error processing image for post $currentPostId: $e');
+          // Skip this image if there's an error
+          continue;
+        }
+      }
     }
   }
 
   Future<void> deleteDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'roomspot.db');
-    
+
     await databaseFactory.deleteDatabase(path);
     _database = null; // Reset the database instance
   }
-} 
+}

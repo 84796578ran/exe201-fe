@@ -68,13 +68,12 @@ class PostRepository extends BaseRepository {
           .toList(),
       orders: orders
           .map((o) => Order(
-                id: o['id'] as String,
-                userId: o['userId'] as String,
-                postId: o['postId'] as String,
-                status: o['status'] as String,
-                checkIn: o['checkIn'] as String,
-                checkOut: o['checkOut'] as String,
-              ))
+              id: o['id'] as String,
+              userId: o['userId'] as String,
+              postId: o['postId'] as String,
+              status: o['status'] as String,
+              checkIn: o['checkIn'] as String,
+              checkOut: o['checkOut'] as String))
           .toList(),
       wishlist: wishlist
           .map((w) => Wishlist(
@@ -172,7 +171,7 @@ class PostRepository extends BaseRepository {
           'postId': post.id,
           'status': order.status,
           'checkIn': order.checkIn,
-          'checkOut': order.checkOut,
+          'checkOut': order.checkOut
         });
       }
 
@@ -241,7 +240,7 @@ class PostRepository extends BaseRepository {
           'postId': post.id,
           'status': order.status,
           'checkIn': order.checkIn,
-          'checkOut': order.checkOut,
+          'checkOut': order.checkOut
         });
       }
 
