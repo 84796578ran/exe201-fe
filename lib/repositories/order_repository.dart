@@ -10,12 +10,19 @@ class OrderRepository extends BaseRepository {
     await db.insert('orders', order.toDb());
   }
 
+  Future<List<Order>> getAllOrders() async {
+    final db = await database;
+    final result = await db.query('orders');
+    return result.map((map) => Order.fromDb(map)).toList();
+  }
+
   Future<List<Order>> getOrdersByUser(String userId) async {
     final db = await database;
     final result = await db.query(
       'orders',
       where: 'userId = ?',
       whereArgs: [userId],
+      orderBy: 'id DESC',
     );
     return result.map((map) => Order.fromDb(map)).toList();
   }
@@ -38,5 +45,18 @@ class OrderRepository extends BaseRepository {
       where: 'id = ?',
       whereArgs: [orderId],
     );
+  }
+
+  Future<Order?> getOrder(String orderId) async {
+    final db = await database;
+    final result = await db.query(
+      'orders',
+      where: 'id = ?',
+      whereArgs: [orderId],
+    );
+    if (result.isNotEmpty) {
+      return Order.fromDb(result.first);
+    }
+    return null;
   }
 }

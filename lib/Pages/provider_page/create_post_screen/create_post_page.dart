@@ -149,6 +149,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
         wishlist: [],
       );
 
+      for (var img in post.images) {
+        print('Image URL: ${img.url}');
+      }
+
       await _postRepository.createPost(post);
 
       if (mounted) {

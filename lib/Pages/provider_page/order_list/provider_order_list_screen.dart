@@ -4,16 +4,16 @@ import '../../../repositories/order_repository.dart';
 import '../../../repositories/post_repository.dart';
 import '../../../repositories/user_repository.dart';
 import '../../../utils/shared_prefs.dart';
-import 'order_detail_screen.dart';
+import 'provider_order_detail_screen.dart';
 
-class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({super.key});
+class ProviderOrderListScreen extends StatefulWidget {
+  const ProviderOrderListScreen({super.key});
 
   @override
-  State<OrderListScreen> createState() => _OrderListScreenState();
+  State<ProviderOrderListScreen> createState() => _ProviderOrderListScreenState();
 }
 
-class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProviderStateMixin {
+class _ProviderOrderListScreenState extends State<ProviderOrderListScreen> with SingleTickerProviderStateMixin {
   final OrderRepository _orderRepository = OrderRepository.instance;
   final PostRepository _postRepository = PostRepository.instance;
   final UserRepository _userRepository = UserRepository.instance;
@@ -41,21 +41,13 @@ class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProv
     try {
       final userEmail = await SharedPrefs.getUserEmail();
       if (userEmail != null) {
-        // First get the user's ID
         final user = await _userRepository.getUserByEmail(userEmail);
         if (user != null) {
-          // Get orders using user ID instead of email
-          final orders = await _orderRepository.getOrdersByUser(user.id);
-          _orders = orders;
-
-          // Get posts for all orders
-          for (var order in orders) {
-            final post = await _postRepository.getPost(order.postId);
-            if (post != null) {
-              _postsMap[order.postId] = post;
-            }
-          }
+          final posts = await _postRepository.getPostsByProvider(user.id);
+          _postsMap = {for (var post in posts) post.id: post};
           
+          final allOrders = await _orderRepository.getAllOrders();
+          _orders = allOrders.where((order) => _postsMap.containsKey(order.postId)).toList();
           _orders.sort((a, b) => b.checkIn.compareTo(a.checkIn));
         }
       }
@@ -110,17 +102,18 @@ class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProv
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
-          if (post != null) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderDetailScreen(
-                  order: order,
-                  post: post,
-                ),
+          final updated = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProviderOrderDetailScreen(
+                order: order,
+                post: post!,
               ),
-            );
-            _loadOrders(); // Refresh list after returning
+            ),
+          );
+          
+          if (updated == true) {
+            _loadOrders();
           }
         },
         child: Column(
@@ -256,16 +249,18 @@ class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProv
                         ),
                         TextButton.icon(
                           onPressed: () async {
-                            await Navigator.push(
+                            final updated = await Navigator.push<bool>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => OrderDetailScreen(
+                                builder: (context) => ProviderOrderDetailScreen(
                                   order: order,
                                   post: post,
                                 ),
                               ),
                             );
-                            _loadOrders();
+                            if (updated == true) {
+                              _loadOrders();
+                            }
                           },
                           icon: const Icon(Icons.arrow_forward),
                           label: const Text('Chi tiết'),
@@ -289,7 +284,7 @@ class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Đơn đặt phòng của tôi'),
+        title: const Text('Danh sách đơn đặt phòng'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
