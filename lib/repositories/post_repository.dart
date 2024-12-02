@@ -70,6 +70,7 @@ class PostRepository extends BaseRepository {
           .map((o) => Order(
                 id: o['id'] as String,
                 userId: o['userId'] as String,
+                postId: o['postId'] as String,
                 status: o['status'] as String,
                 checkIn: o['checkIn'] as String,
                 checkOut: o['checkOut'] as String,

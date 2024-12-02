@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends StatelessWidget {
   static const path = "/favorite";
   const FavoriteScreen({super.key});
 
   @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
-}
-
-class _FavoriteScreenState extends State<FavoriteScreen> {
-  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Text('Thông báo'),
+      ),
+    );
   }
 }
