@@ -8,9 +8,7 @@ import 'Pages/provider_page/controllers/user_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   final db = await DatabaseHelper.instance.database;
-  
   Get.put(UserController());
   Get.put(PostController());
   runApp(const MyApp());
@@ -66,7 +64,6 @@ class MyHomePage extends StatelessWidget {
                 'ROOMSPOT',
                 style: TextStyle(
                   fontSize: 48,
-
                   fontWeight: FontWeight.bold,
                   color: Colors.blue, // Màu chữ nổi bật trên hình nền
                   shadows: [
