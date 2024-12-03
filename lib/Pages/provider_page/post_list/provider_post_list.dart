@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/Pages/provider_page/DetailPost/detail_post_file.dart';
 import '../../../Models/post.dart';
 import '../../../repositories/post_repository.dart';
 import '../../../repositories/user_repository.dart';
@@ -99,7 +100,7 @@ class ProviderPostListState extends State<ProviderPostList> {
   Widget _buildPostCard(Post post, int index) {
     String genderText = '';
     Color genderColor = Colors.blue;
-    
+
     switch (post.forGender.toLowerCase()) {
       case 'male':
         genderText = 'Nam';
@@ -114,195 +115,204 @@ class ProviderPostListState extends State<ProviderPostList> {
         genderColor = Colors.green;
     }
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Stack(
-        children: [
-          // Main content
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Image section with fixed width
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                  ),
-                  child: SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        post.images.isNotEmpty
-                            ? Image.memory(
-                                post.images[0].url,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey[300],
-                                    child: const Icon(Icons.error),
-                                  );
-                                },
-                              )
-                            : Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PostDetailScreenProvider(post: post),
+          ),
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Stack(
+          children: [
+            // Main content
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Image section with fixed width
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                    ),
+                    child: SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          post.images.isNotEmpty
+                              ? Image.memory(
+                            post.images[0].url,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
                                 color: Colors.grey[300],
-                                child: const Icon(Icons.image),
+                                child: const Icon(Icons.error),
+                              );
+                            },
+                          )
+                              : Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image),
+                          ),
+                          // Gender badge
+                          Positioned(
+                            bottom: 8,
+                            right: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
                               ),
-                        // Gender badge
-                        Positioned(
-                          bottom: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: genderColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              genderText,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                              decoration: BoxDecoration(
+                                color: genderColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                genderText,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Content section
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                  // Content section
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            post.title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                post.address,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(Icons.square_foot, size: 16, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${post.square}m²',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                            ),
-                            if (post.utilities.isNotEmpty) ...[
-                              const SizedBox(width: 8),
-                              Icon(Icons.check_circle_outline, size: 16, color: Colors.grey[600]),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on, size: 16, color: Colors.grey),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  post.utilities.first.name,
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                                  post.address,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
-                          ],
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Row(
-                              children: List.generate(5, (index) {
-                                return Icon(
-                                  index < post.rating.floor()
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color: Colors.amber,
-                                  size: 16,
-                                );
-                              }),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${post.rating}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(Icons.square_foot, size: 16, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${post.square}m²',
+                                style: TextStyle(color: Colors.grey[600], fontSize: 14),
                               ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              _formatPrice(post.price),
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                              if (post.utilities.isNotEmpty) ...[
+                                const SizedBox(width: 8),
+                                Icon(Icons.check_circle_outline, size: 16, color: Colors.grey[600]),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    post.utilities.first.name,
+                                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              Row(
+                                children: List.generate(5, (index) {
+                                  return Icon(
+                                    index < post.rating.floor()
+                                        ? Icons.star
+                                        : Icons.star_border,
+                                    color: Colors.amber,
+                                    size: 16,
+                                  );
+                                }),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(width: 4),
+                              Text(
+                                '${post.rating}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                _formatPrice(post.price),
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Top badge if index < 3
+            if (index < 3)
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Top ${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          // Top badge if index < 3
-          if (index < 3)
-            Positioned(
-              top: 8,
-              left: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Top ${index + 1}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
