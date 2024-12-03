@@ -229,6 +229,36 @@
       "fullName": "Khoa Nguyễn",
       "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
       "id": "23"
+    },
+    {
+      "email": "batnapquantai31@gmail.com",
+      "password": "1",
+      "phone": "0862958649",
+      "address": "",
+      "role": "provider",
+      "fullName": "Kiến Quốc",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "24"
+    },
+    {
+      "email": "nguyendongtrieu17@gmail.com",
+      "password": "1",
+      "phone": "0862958649",
+      "address": "",
+      "role": "provider",
+      "fullName": "Đông Triều",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "25"
+    },
+    {
+      "email": "mavizthi@gmail.com",
+      "password": "1",
+      "phone": "0862958649",
+      "address": "",
+      "role": "provider",
+      "fullName": "Thu Thủy",
+      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
+      "id": "26"
     }
   ]
 }
