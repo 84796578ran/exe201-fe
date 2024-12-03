@@ -1,9 +1,11 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:roomspot/Models/user.dart';
+import 'package:roomspot/Pages/common_page/welcome_page/welcome_page.dart';
 import 'package:roomspot/repositories/user_repository.dart';
 import 'package:roomspot/services/image_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -20,7 +22,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
-  
+
   Uint8List? _selectedImage;
   final UserRepository _userRepository = UserRepository.instance;
 
@@ -49,7 +51,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _passwordController.text.isEmpty ||
         _fullNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin bắt buộc!")),
+        const SnackBar(
+            content: Text("Vui lòng điền đầy đủ thông tin bắt buộc!")),
       );
       return;
     }
@@ -67,6 +70,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         role: 'renter', // Default role
       );
 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', user.email);
+
       // Save to database
       await _userRepository.insertUser(user);
 
@@ -74,10 +80,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Đăng ký thành công!")),
         );
-        Navigator.pushReplacement(
-          context, 
-          MaterialPageRoute(builder: (context) => const WelcomePage())
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const WelcomePage()));
       }
     } catch (e) {
       if (mounted) {
@@ -106,7 +110,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: CircleAvatar(
                 radius: 60,
                 backgroundColor: Colors.grey[300],
-                backgroundImage: _selectedImage != null 
+                backgroundImage: _selectedImage != null
                     ? MemoryImage(_selectedImage!)
                     : null,
                 child: _selectedImage == null
