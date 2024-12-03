@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/Pages/provider_page/create_post_screen/create_post_page.dart';
 import 'package:roomspot/Pages/provider_page/post_list/provider_post_list.dart';
-
+import 'package:roomspot/Pages/provider_page/providers/User_Detail_Information.dart';
 import 'components/provider_more_menu.dart';
 
 class ProviderNavbar extends StatefulWidget {
@@ -21,12 +22,20 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          if (index == 3) {
+            // Điều hướng sang UserProfilePage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const UserProfilePage()),
+            );
+          } else {
+            // Thay đổi chỉ số trang hiện tại
+            setState(() {
+              currentPageIndex = index;
+            });
+          }
         },
-        surfaceTintColor: Colors.white,
-        indicatorColor: Colors.blue,
+        indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -117,12 +126,6 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
                   ),
                 );
               },
-            ),
-            Center(
-              child: Text(
-                'Thông tin cá nhân',
-                style: theme.textTheme.titleLarge,
-              ),
             ),
           ][currentPageIndex],
           ProviderMoreMenu(
