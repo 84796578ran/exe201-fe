@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:roomspot/Models/user.dart';
 import 'package:roomspot/repositories/user_repository.dart';
 import 'package:roomspot/utils/shared_prefs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -23,15 +21,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future<void> _loadUserInfo() async {
-   final String ? userEmail = await SharedPrefs.getUserEmail();
-
-    if (userEmail != null) {
-      setState(() {
-        _userInfo = json.decode(userEmail);
-      });
-
+    final String? userEmail = await SharedPrefs.getUserEmail();
+    if (userEmail == null) {
+      return;
     }
-    final User? user = await _userRepository.getUserByEmail(userEmail!);
+
+    final User? user = await _userRepository.getUserByEmail(userEmail);
+    if (user != null) {
+      setState(() {
+        _userInfo = {
+          'name': user.fullName,
+          'email': user.email,
+          'phone': user.phone,
+          'address': user.address,
+          'avatar': user.avatar,
+        };
+      });
+    }
   }
 
   @override
@@ -49,7 +55,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage(_userInfo!['avatar'] ?? 'default_avatar.png'),
+              backgroundImage: _userInfo!['avatar'] != null
+                  ? NetworkImage(_userInfo!['avatar'])
+                  : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
             ),
             const SizedBox(height: 16),
             Text('Họ và tên: ${_userInfo!['name']}', style: const TextStyle(fontSize: 18)),
