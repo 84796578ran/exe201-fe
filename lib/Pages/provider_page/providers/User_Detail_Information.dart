@@ -1,105 +1,61 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:roomspot/Models/user.dart';
+import 'package:roomspot/repositories/user_repository.dart';
+import 'package:roomspot/utils/shared_prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfilePage extends StatefulWidget {
-  final String userId; // Truyền ID của người dùng để hiển thị
-
-  const UserProfilePage({Key? key, required this.userId}) : super(key: key);
+  const UserProfilePage({super.key});
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  Map<String, dynamic>? userData;
+  Map<String, dynamic>? _userInfo;
+  final UserRepository _userRepository = UserRepository.instance;
 
   @override
   void initState() {
     super.initState();
-    fetchUserData();
+    _loadUserInfo();
   }
 
-  Future<void> fetchUserData() async {
-    // JSON data - có thể thay bằng API hoặc file JSON
-    final String jsonData = '''
-{
-  "users": [
-    {
-      "email": "quynhthuvuhai@gmail.com",
-      "password": "1",
-      "phone": "0946291203",
-      "address": "Linh Đông, Thủ Đức",
-      "role": "renter",
-      "fullName": "Thu Thủy",
-      "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/481.jpg",
-      "id": "1"
-    }
-    // Thêm dữ liệu user tại đây
-  ]
-}
-''';
+  Future<void> _loadUserInfo() async {
+   final String ? userEmail = await SharedPrefs.getUserEmail();
 
-    final Map<String, dynamic> data = json.decode(jsonData);
-    final users = data['users'] as List<dynamic>;
-
-    // Tìm người dùng theo ID
-    final user = users.firstWhere(
-            (user) => user['id'].toString() == widget.userId,
-        orElse: () => null);
-
-    if (user != null) {
+    if (userEmail != null) {
       setState(() {
-        userData = user as Map<String, dynamic>;
+        _userInfo = json.decode(userEmail);
       });
+
     }
+    final User? user = await _userRepository.getUserByEmail(userEmail!);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(userData?['fullName'] ?? 'Loading...'),
+        title: const Text('Thông tin cá nhân'),
       ),
-      body: userData == null
+      body: _userInfo == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(userData!['avatar']),
-                radius: 50,
-              ),
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage(_userInfo!['avatar'] ?? 'default_avatar.png'),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Name: ${userData!['fullName'] ?? 'N/A'}',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Email: ${userData!['email']}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Phone: ${userData!['phone'] ?? 'N/A'}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Address: ${userData!['address'] ?? 'N/A'}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Role: ${userData!['role']}',
-              style: const TextStyle(fontSize: 16),
-            ),
+            Text('Họ và tên: ${_userInfo!['name']}', style: const TextStyle(fontSize: 18)),
+            Text('Email: ${_userInfo!['email']}', style: const TextStyle(fontSize: 18)),
+            Text('Số điện thoại: ${_userInfo!['phone'] ?? 'N/A'}', style: const TextStyle(fontSize: 18)),
+            Text('Địa chỉ: ${_userInfo!['address'] ?? 'N/A'}', style: const TextStyle(fontSize: 18)),
           ],
         ),
       ),
