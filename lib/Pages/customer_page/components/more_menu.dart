@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:roomspot/utils/static_color.dart';
+
 import '../../../Pages/customer_page/order_screen/order_list_screen.dart';
 
 class MoreMenu extends StatefulWidget {
@@ -10,10 +12,10 @@ class MoreMenu extends StatefulWidget {
 
 class _MoreMenuState extends State<MoreMenu> {
   bool isExpanded = false;
-  final Color menuColor = const Color(0xFFFF4081);
+  final Color menuColor = StaticColor.primaryColor;
 
   late final List<MenuOption> menuOptions = [
-    MenuOption(
+    /*MenuOption(
       icon: Icons.task_alt,
       label: 'Task',
       color: menuColor,
@@ -36,7 +38,7 @@ class _MoreMenuState extends State<MoreMenu> {
       onTap: () {
         // TODO: Implement tag functionality
       },
-    ),
+    ),*/
     MenuOption(
       icon: Icons.receipt_long,
       label: 'Đơn đặt phòng',
@@ -162,4 +164,4 @@ class MenuOption {
     required this.color,
     required this.onTap,
   });
-} 
+}

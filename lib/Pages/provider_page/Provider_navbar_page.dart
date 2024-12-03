@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:roomspot/Pages/provider_page/create_post_screen/create_post_page.dart';
 import 'package:roomspot/Pages/provider_page/post_list/provider_post_list.dart';
+
 import 'components/provider_more_menu.dart';
 
 class ProviderNavbar extends StatefulWidget {
@@ -25,7 +25,8 @@ class _ProviderNavbarleState extends State<ProviderNavbar> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Colors.amber,
+        surfaceTintColor: Colors.white,
+        indicatorColor: Colors.blue,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
