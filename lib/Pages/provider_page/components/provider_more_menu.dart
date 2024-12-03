@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../create_post_screen/create_post_page.dart';
 import '../order_list/provider_order_list_screen.dart';
 
 class ProviderMoreMenu extends StatefulWidget {
   final Function() onCreatePostSuccess;
-  
+
   const ProviderMoreMenu({
     super.key,
     required this.onCreatePostSuccess,
@@ -16,7 +17,7 @@ class ProviderMoreMenu extends StatefulWidget {
 
 class _ProviderMoreMenuState extends State<ProviderMoreMenu> {
   bool isExpanded = false;
-  final Color menuColor = Colors.amber;
+  final Color menuColor = Colors.blue;
 
   late final List<MenuOption> menuOptions = [
     MenuOption(
@@ -158,4 +159,4 @@ class MenuOption {
     required this.color,
     required this.onTap,
   });
-} 
+}

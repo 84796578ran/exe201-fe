@@ -5,6 +5,7 @@ import 'package:roomspot/Pages/customer_page/Home_screen/home_screen.dart';
 import 'package:roomspot/Pages/customer_page/Message_screen/message_page.dart';
 import 'package:roomspot/Pages/customer_page/Profile_screen/profile_screen.dart';
 import 'package:roomspot/Pages/customer_page/components/more_menu.dart';
+import 'package:roomspot/utils/static_color.dart';
 
 final selectedGlobalIndex = ValueNotifier(0);
 
@@ -24,10 +25,19 @@ class _HomePageState extends State<CustomerHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static const List<Destination> allDestinations = <Destination>[
-    Destination('Trang chủ', Icons.home, Icons.home, Colors.blue, Colors.white, HomeScreen.path),
-    Destination('Tin nhắn', Icons.message, Icons.message, Colors.blue, Colors.white, MessageScreen.path),
-    Destination('Thông báo', Icons.circle_notifications_outlined, Icons.notification_add_outlined, Colors.blue, Colors.white, FavoriteScreen.path),
-    Destination('Cá nhân', Icons.boy, Icons.boy, Colors.blue, Colors.white, ProfileScreen.path),
+    Destination('Trang chủ', Icons.home, Icons.home, StaticColor.primaryColor,
+        Colors.white, HomeScreen.path),
+    Destination('Tin nhắn', Icons.message, Icons.message,
+        StaticColor.primaryColor, Colors.white, MessageScreen.path),
+    Destination(
+        'Thông báo',
+        Icons.circle_notifications_outlined,
+        Icons.notification_add_outlined,
+        StaticColor.primaryColor,
+        Colors.white,
+        FavoriteScreen.path),
+    Destination('Cá nhân', Icons.boy, Icons.boy, StaticColor.primaryColor,
+        Colors.white, ProfileScreen.path),
   ];
 
   @override
@@ -43,21 +53,23 @@ class _HomePageState extends State<CustomerHomePage> {
               context.go(allDestinations[index].path);
             },
             surfaceTintColor: Colors.white,
-            indicatorColor: Colors.blue,
+            indicatorColor: StaticColor.primaryColor,
             selectedIndex: value,
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            destinations: allDestinations.map((e) => NavigationDestination(
-              icon: Icon(
-                e.icon,
-                color: e.color,
-                size: 40,
-              ),
-              selectedIcon: Icon(
-                e.selectedIcon,
-                color: e.selectedColor,
-              ),
-              label: e.title,
-            )).toList(),
+            destinations: allDestinations
+                .map((e) => NavigationDestination(
+                      icon: Icon(
+                        e.icon,
+                        color: e.color,
+                        size: 40,
+                      ),
+                      selectedIcon: Icon(
+                        e.selectedIcon,
+                        color: e.selectedColor,
+                      ),
+                      label: e.title,
+                    ))
+                .toList(),
           );
         },
       ),
@@ -72,7 +84,8 @@ class _HomePageState extends State<CustomerHomePage> {
 }
 
 class Destination {
-  const Destination(this.title, this.icon, this.selectedIcon, this.color, this.selectedColor, this.path);
+  const Destination(this.title, this.icon, this.selectedIcon, this.color,
+      this.selectedColor, this.path);
 
   final String title;
   final IconData icon;

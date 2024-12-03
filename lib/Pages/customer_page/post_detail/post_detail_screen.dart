@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomspot/Pages/customer_page/provider_profile/provider_profile_screen.dart';
+import 'package:roomspot/utils/static_color.dart';
 
 import '../../../Models/post.dart';
 import '../../../repositories/user_repository.dart';
@@ -448,12 +449,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BookingDateScreen(post: widget.post),
+                      builder: (context) =>
+                          BookingDateScreen(post: widget.post),
                     ),
                   );
                 },
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: StaticColor.primaryColor,
                 ),
                 child: const Text('Đặt phòng'),
               ),
